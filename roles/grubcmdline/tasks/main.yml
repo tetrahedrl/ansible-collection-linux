@@ -101,7 +101,16 @@
 - name: Generate new grub config (Ubuntu/Debian) # noqa: no-changed-when
   ansible.builtin.command: /usr/sbin/update-grub
   become: true
-  when: ansible_facts.os_family == "Debian"
+  when:
+    - ansible_facts.os_family == "Debian"
+    - old_cmdline != kernel_cmdline | select() | sort | list
+
+- name: Update initramfs (Ubuntu/Debian) # noqa: no-changed-when
+  ansible.builtin.command: /usr/sbin/update-initramfs -u
+  become: true
+  when:
+    - ansible_facts.os_family == "Debian"
+    - old_cmdline != kernel_cmdline | select() | sort | list
 
 - name: Generate new grub-config (RedHat >= 9.x)
   # NOTE: This is the new fangled way: https://unix.stackexchange.com/questions/557841/what-is-the-correct-way-to-handle-default-kernelopts-in-fedora-31
