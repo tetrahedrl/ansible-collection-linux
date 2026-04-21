@@ -1,2 +1,4 @@
 ---
 # handlers file for stackhpc.linux.grubcmdline
+- name: reboot
+  ansible.builtin.reboot:
